@@ -10,11 +10,8 @@ class Wallet(models.Model):
     def __str__(self):
         return f"{self.user}"
 
-
-
 class Transaction(models.Model):
-    made_by = models.ForeignKey(User, related_name='transactions', 
-                                on_delete=models.CASCADE)
+    made_by = models.ForeignKey(User, related_name='transactions', on_delete=models.CASCADE)
     made_on = models.DateTimeField(auto_now_add=True)
     amount = models.IntegerField()
     order_id = models.CharField(unique=True, max_length=100, null=True, blank=True)

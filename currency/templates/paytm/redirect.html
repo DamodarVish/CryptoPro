@@ -1,7 +1,7 @@
 {% extends 'home.html' %}
 {% block content %}
-<h1>Please do not refresh this page...</h1>
-<form method="post" action="https://securegw-stage.paytm.in/order/process/" name="f1">
+<h6>Please do not refresh this page...</h6>
+<form method="post" action="https://securegw-stage.paytm.in/theia/processTransaction" name="f1">
     <table>
         <tbody>
             <input type="hidden" name="MID" value="{{ MID }}">
@@ -15,9 +15,8 @@
             <input type="hidden" name="CHECKSUMHASH" value="{{ CHECKSUMHASH }}">
         </tbody>
     </table>
+    <script type="text/javascript">
+        document.f1.submit();
+    </script>
 
 {% endblock content %}
-
-<script type="text/javascript">
-    document.f1.submit();
-</script>

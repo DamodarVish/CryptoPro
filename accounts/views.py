@@ -96,7 +96,7 @@ def login_view(request):
 			return redirect('login')
 		elif not User.objects.get(username=usrname).is_active:
 			usr = User.objects.get(username=usrname)
-			usr_otp = random.randint(100000, 999999)
+			usr_otp = random.randint(1000 ,9999)
 			UserOTP.objects.create(user = usr, otp = usr_otp)
 			mess = f"Hello {usr.first_name},\nYour OTP is {usr_otp}\nThanks!"
 
@@ -107,7 +107,7 @@ def login_view(request):
 				[usr.email],
 				fail_silently = False
 				)
-			return render(request, 'user/login.html', {'otp': True, 'usr': usr})
+			return render(request, 'accounts/login.html', {'otp': True, 'usr': usr})
 		else:
 			messages.warning(request, f'Please enter a correct username and password. Note that both fields may be case-sensitive.')
 			return redirect('login')

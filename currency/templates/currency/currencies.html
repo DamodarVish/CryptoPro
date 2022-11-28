@@ -21,7 +21,7 @@
             <td>{{cur.name}}</td>
             <td>{{cur.coin}}</td>
             <td>{{cur.price}}</td>
-            <td><button class="btn btn-sm btn-primary">invest</button></td>
+            <td><a class="btn btn-sm btn-primary" href="{% url 'pay' %}">invest</a></td>
         </tr>
         {% endfor %}
     </tbody>

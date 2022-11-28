@@ -28,15 +28,11 @@ def currency(request):
     response = requests.request("GET", url, headers=headers).json()[:20]
     return render(request, 'currency/currencies.html', context={'data':response})
 
-def wallet(request):
-    wallet = get_object_or_404(Wallet, user=request.user)
-    return render(request, 'currency/wallet.html', context={'wallet':wallet})
-
-
 
 def initiate_payment(request):
+    # global amount
     if request.method == "GET":
-        return render(request, 'payments/pay.html')
+        return render(request, 'paytm/pay.html')
     try:
         username = request.POST['username']
         password = request.POST['password']
@@ -46,7 +42,7 @@ def initiate_payment(request):
             raise ValueError
         auth_login(request=request, user=user)
     except:
-        return render(request, 'payments/pay.html', context={'error': 'Wrong Accound Details or amount'})
+        return render(request, 'paytm/pay.html', context={'error': 'Wrong Account Details or amount'})
 
     transaction = Transaction.objects.create(made_by=user, amount=amount)
     transaction.save()
@@ -68,14 +64,14 @@ def initiate_payment(request):
 
     paytm_params = dict(params)
     checksum = generate_checksum(paytm_params, merchant_key)
-
     transaction.checksum = checksum
     transaction.save()
-
     paytm_params['CHECKSUMHASH'] = checksum
-    print('SENT: ', checksum)
-    return render(request, 'payments/redirect.html', context=paytm_params)
+    return render(request, 'paytm/redirect.html', context=paytm_params)
 
+def wallet(request):
+    wallet = get_object_or_404(Wallet, user=request.user)
+    return render(request, 'currency/wallet.html', context={'wallet':wallet})
 
 
 @csrf_exempt
@@ -84,6 +80,7 @@ def callback(request):
         received_data = dict(request.POST)
         paytm_params = {}
         paytm_checksum = received_data['CHECKSUMHASH'][0]
+        # breakpoint()
         for key, value in received_data.items():
             if key == 'CHECKSUMHASH':
                 paytm_checksum = value[0]
@@ -95,5 +92,5 @@ def callback(request):
             received_data['message'] = "Checksum Matched"
         else:
             received_data['message'] = "Checksum Mismatched"
-            return render(request, 'payments/callback.html', context=received_data)
-        return render(request, 'payments/callback.html', context=received_data)
+            return render(request, 'paytm/callback.html', context=received_data)
+        return render(request, 'paytm/callback.html', context=received_data)
